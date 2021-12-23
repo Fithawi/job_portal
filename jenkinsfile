@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+                sh 'composer install'
+
+                sh 'cp .env.example .env'
+
+                sh 'php artisan key:generate'
+
+                sh 'php artisan config:cache'
+
+                sh './vendor/bin/phpunit ./tests'
+            }
+        }
+     stage('Build docker image'){
+           steps{
+               sh 'pwd'
+               
+               sh 'ls -a'
+               
+               echo "I am fine how about what me "
+               
+               sh "docker build . -t jobportalimg:${env.BUILD_ID}"
+           }
+     }   
+    }
+}
